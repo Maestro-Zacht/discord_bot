@@ -54,7 +54,7 @@ def elabora_file(channel):
 
         yloc = rect.get_y() + rect.get_height() / 2
 
-        ax.annotate(str(dati_x[i])+' m$^3$', xy=(width, yloc),
+        ax.annotate(str(int(dati_x[i])) + ' m$^3$', xy=(width, yloc),
                     xytext=(xloc, 0), textcoords="offset points",
                     ha=align, va='center', color=clr, weight='bold', clip_on=True)
         i += 1
@@ -63,10 +63,10 @@ def elabora_file(channel):
     ax.set_ylabel('Pilot')
     ax.set_title('Society Pandora Corporation Moon Mining')
 
-    fig.savefig('prova.jpg')
+    fig.savefig('finale.jpg')
     plt.close(fig)
 
-    send.append(channel.send(file=discord.File('prova.jpg')))
+    send.append(channel.send(file=discord.File('finale.jpg')))
 
     testo = 'Percentuali di raccolta:\n'
     for giocatore, val in giocatori.items():
@@ -86,7 +86,7 @@ async def on_ready():
 async def on_message(message):
     if message.author != client.user and message.guild.name == GUILD and message.channel.name == CHANNEL:
         print('messaggio ricevuto, elaborazione...')
-        if len(message.attachments) == 1:
+        if len(message.attachments) != 0:
             for file in message.attachments:
                 with open('allegato.csv', 'wb') as f:
                     await file.save(f)
