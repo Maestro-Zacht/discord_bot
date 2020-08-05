@@ -1,7 +1,6 @@
 # questo progetto
-allegato.csv
-file.csv
-prova.jpg
+*.csv
+*.jpg
 
 
 # Byte-compiled / optimized / DLL files
