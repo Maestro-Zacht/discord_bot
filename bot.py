@@ -1,5 +1,5 @@
 import os
-import sys
+import traceback
 import collections
 import discord
 from threading import get_native_id
@@ -197,6 +197,7 @@ async def on_message(message):
                     with open(f'media/file{get_native_id()}.csv', 'w') as wri:
                         wri.write(f.read().replace('\t', ',').replace('    ', ','))
                 send = elabora_file(message.channel)
+                print('messaggio elaborato')
                 for i in send:
                     await i
         else:
@@ -204,10 +205,11 @@ async def on_message(message):
                 f.write(message.content.replace('    ', ',').replace('\t', ','))
 
             send = elabora_file(message.channel)
+            print('messaggio elaborato')
             for i in send:
                 await i
 
-        print('messaggio elaborato')
+        print('messaggi inviati')
 
 
 @client.event
@@ -218,18 +220,10 @@ async def on_error(event, *args, **kwargs):
         messaggio = args[0]
         await maestro.send(f"É stato rilevato un errore. Il messaggio proveniva dal server ({messaggio.guild.name}) nel canale ({messaggio.channel.name}). Il contenuto che l'ha lanciato è:\n\n\n{messaggio.content}\n\n\n")
         if len(messaggio.attachments) != 0:
-            try:
-                raisa = False
-                print(dir(messaggio.attachments))
-                await maestro.send('Il messaggio conteneva i seguenti files:', files=messaggio.attachments)
-            except Exception:
-                raisa = True
+            await maestro.send('Il messaggio conteneva i seguenti files:', files=[await x.to_file() for x in messaggio.attachments])
 
-        tipo, value, trace = sys.exc_info()
-
-        await maestro.send(f"\n\n\nL'errore è:\n\ntipo:\n{repr(tipo)}\n\nvalue:\n{repr(value)}\n\ntraceback:\n{repr(trace)}")
-        if raisa:
-            raise
+        await maestro.send(f"\n\n\nL'errore è:\n\n{traceback.format_exc()}")
+        print('errore handlato')
     else:
         raise
 
