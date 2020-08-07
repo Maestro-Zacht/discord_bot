@@ -189,11 +189,14 @@ async def on_message(message):
     NOME_THREAD = get_native_id()
 
     # non accetta DM o messaggi da se stesso
-    if message.guild is None or message.author == client.user:
-        return
+    if message.guild is None and message.author != client.user:
+        if message.author.dm_channel is None:
+            await message.author.create_dm()
+        await message.author.dm_channel.send('Non rispondo ai messaggi in privato\n:money_mouth:')
+        print('risposto a dm')
 
     # cattura il messaggio solo se in specifico canale
-    if message.guild.name == GUILD and message.channel.name == CHANNEL:
+    elif message.author != client.user and message.guild.name == GUILD and message.channel.name == CHANNEL:
         print('messaggio ricevuto, elaborazione...')
 
         if len(message.attachments) != 0:
